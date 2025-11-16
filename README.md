@@ -1,2 +1,3 @@
-# northkorean_news_maker
-北朝鮮報道文メーカー
+# アジプロジェネレーター
+プロンプトに入力するとソ連風のアジプロ文が出力されます
+実行方法：uvicorn main:app --reload
