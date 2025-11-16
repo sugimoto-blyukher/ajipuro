@@ -3,7 +3,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from dotenv import load_dotenv
-from app.prompt import GenerateRequest, GenerateResponse
 from google import genai
 import os
 from google.genai import types
@@ -14,10 +13,10 @@ load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
 if not API_KEY:
-    raise RuntimeError("環境変数 GEMINI_API_KEY が設定されていません。")
+    raise RuntimeError("環境変数 GOOGLE_API_KEY が設定されていません。")
 
 
-client = genai.Client()
+client = genai.Client(api_key=API_KEY)
 
 MODEL_NAME = "gemini-2.5-flash"
 
@@ -38,7 +37,7 @@ async def show_form(request: Request):
         },
     )
 
-@app.post("/", response_model=GenerateResponse, response_class=HTMLResponse)
+@app.post("/", response_class=HTMLResponse)
 async def generate_text(
     request: Request,
     prompt: str = Form(...)
