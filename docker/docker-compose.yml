@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  fastapi:
+    build:
+      context: ..
+      dockerfile: ./docker/fastapi/Dockerfile
+    container_name: fastapi-app
+    restart: always
+    working_dir: /app
+    tty: true
+    ports:
+      - "8080:8080"
+      
+    command: uvicorn main:app --reload
+
+
+
+

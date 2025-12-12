@@ -1,0 +1,1 @@
+FROM mongodb:8.2-noble
