@@ -6,10 +6,12 @@ router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def show_form(request: Request):
-    api.returnTemplate(request)
+    return api.returnTemplate(request)
+
+
 @router.post("/", response_class=HTMLResponse)
 async def generate_text(
     request: Request,
     prompt: str = Form(...)
 ):
-    api.return_text(request, prompt)
+    return api.return_text(request, prompt)

@@ -3,18 +3,17 @@ FROM python:3.14-slim-bookworm
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 
-# 作業ディレクトリを設定
-#WORKDIR /app
+WORKDIR /app
 
 # requirements.txtをコピー＆インストール
-COPY requirements.txt .
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-#appをコピー
-COPY ./app /app
+COPY main.py ./
+COPY app ./app
+COPY templates ./templates
+COPY public ./public
 
-#ポート開放
-EXPOSE 8080
+EXPOSE 8000
 
-# 本番用CMD
-CMD ["uvicorn",  "main:app", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

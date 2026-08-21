@@ -7,15 +7,16 @@ from app.config import config
 
 templates = Jinja2Templates(directory="templates")
 
-client = genai.Client(api_key="AIzaSyCoRv_ksEZWLV2AyLjzNiFjTz17azqca1s")
+client = genai.Client(api_key=config.API_KEY)
 modelName = config.MODEL_NAME
+systemInstruction = config.SYSTEM_INSTRUCTION
 
 
 def returnTemplate(request):
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "prompt": "",
             "result": None,
             "model": modelName,
@@ -28,7 +29,8 @@ def return_text(request, prompt):
         result = client.models.generate_content(
             model=modelName,
             config=types.GenerateContentConfig(
-                system_instruction="あなたはソ連のプラウダの編集員だ。promptの内容をソ連のアジプロ風に変換しろ、それだけ出力すればいい"),
+                system_instruction=systemInstruction
+            ),
             contents=prompt,
         )
         text = result.text
@@ -36,9 +38,9 @@ def return_text(request, prompt):
         raise HTTPException(status_code=500,detail=f'Gemini API error: {e}')
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "prompt": prompt,
             "result": text,
             "model": modelName,
