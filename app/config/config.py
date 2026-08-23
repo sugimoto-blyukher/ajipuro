@@ -9,26 +9,37 @@ API_KEY = os.getenv("GOOGLE_API_KEY")
 if not API_KEY:
     raise RuntimeError("環境変数 GOOGLE_API_KEY が設定されていません。")
 
-MODEL_NAME = "gemini-3.5-flash"
-
 BASE_DIR = Path(__file__).resolve().parent
-INSTRUCTION_PROMPT_PATH = BASE_DIR / "instruction_prompt.toml"
+SETTING_PATH = BASE_DIR / "setting.toml"
 
 
-def load_instruction_prompt(path: Path = INSTRUCTION_PROMPT_PATH) -> str:
-    if not path.exists():
-        raise RuntimeError(f"指示プロンプト設定ファイルが見つかりません: {path}")
+def load_setting() -> dict:
+    if not SETTING_PATH.exists():
+        raise RuntimeError(f"設定ファイルが見つかりません: {SETTING_PATH}")
 
-    with path.open("rb") as f:
-        data = tomllib.load(f)
+    with SETTING_PATH.open("rb") as f:
+        return tomllib.load(f)
 
-    prompt = data.get("instruction", {}).get("prompt")
+
+def load_prompt(data: dict) -> str:
+    instruction = data.get("instruction")
+    prompt = instruction.get("prompt") if isinstance(instruction, dict) else None
     if not isinstance(prompt, str) or not prompt.strip():
-        raise RuntimeError(
-            "指示プロンプト設定ファイルに instruction.prompt を設定してください。"
-        )
+        raise RuntimeError("設定ファイルに instruction.prompt を設定してください。")
 
     return prompt
 
 
-SYSTEM_INSTRUCTION = load_instruction_prompt()
+def load_model(data: dict) -> str:
+    model = data.get("model")
+    name = model.get("name") if isinstance(model, dict) else None
+    if not isinstance(name, str) or not name.strip():
+        raise RuntimeError("設定ファイルに model.name を設定してください。")
+
+    return name
+
+
+data = load_setting()
+
+SYSTEM_INSTRUCTION = load_prompt(data)
+MODEL_NAME = load_model(data)
