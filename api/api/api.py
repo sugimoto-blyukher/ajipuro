@@ -2,10 +2,10 @@ from fastapi import  HTTPException
 from fastapi.templating import Jinja2Templates
 from google import genai
 from google.genai import types
-from app.config import config
+from api.config import config
 
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="public")
 
 client = genai.Client(api_key=config.API_KEY)
 modelName = config.MODEL_NAME

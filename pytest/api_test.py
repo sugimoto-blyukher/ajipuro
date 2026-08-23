@@ -11,7 +11,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 os.environ.setdefault("GOOGLE_API_KEY", "dummy-api-key")
 
-from app.api import api  # noqa: E402
+from api.api import api  # noqa: E402
 
 
 class FakeTemplates:
